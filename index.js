@@ -5,7 +5,6 @@ const {
   ActionRowBuilder, 
   ButtonBuilder, 
   ButtonStyle,
-  StringSelectMenuBuilder,
   ChannelType,
   PermissionsBitField
 } = require('discord.js');
@@ -23,44 +22,45 @@ client.once('clientReady', () => {
   console.log(`🔥 Bot online como ${client.user.tag}`);
 });
 
-// COMANDOS
+// COMANDO !holo
 client.on('messageCreate', async (message) => {
 
   if (message.author.bot) return;
 
-  // 🔥 PAINEL FFH4X
-  if (message.content === '!gbxit') {
-
-    const embed = new EmbedBuilder()
-      .setTitle('🔥😈 Painel FFH4X ANDROID 😈🔥')
-      .setDescription('Clique abaixo para comprar seu painel')
-      .setColor(0x00ff88);
-
-    const botao = new ButtonBuilder()
-      .setCustomId('abrir_ticket')
-      .setLabel('Comprar FFH4X')
-      .setStyle(ButtonStyle.Success);
-
-    const row = new ActionRowBuilder().addComponents(botao);
-
-    message.channel.send({ embeds: [embed], components: [row] });
-  }
-
-  // 👁️ PAINEL HOLOGRAMA
   if (message.content === '!holo') {
 
     const embed = new EmbedBuilder()
       .setTitle('👁️🔥 Painel HOLOGRAMA ANDROID 🔥👁️')
       .setDescription(`
-👁️🔥 **Painel Holograma (ESP)**  
+👁️🔥 **Adquira Já seu Painel HOLOGRAMA** 🔥👁️  
 
-👀 Veja inimigos através das paredes  
+💎 O famoso sistema de visão avançada (ESP)
 
-💥 Vantagem total no jogo  
+👀 **O que ele faz?**  
+• Permite ver inimigos através das paredes  
+• Mostra posição em tempo real  
+• Vantagem total no jogo  
 
-💰 Valor: R$5,00  
+🔥 **Diferenciais**  
+• Leve e otimizado 🚀  
+• Funciona em várias versões Android  
+• Fácil instalação  
 
-😈 Garanta o seu agora!
+🎮 **Ideal para:**  
+• Subir rank  
+• Jogar competitivo  
+• Ter vantagem estratégica  
+
+📦 **Você recebe:**  
+• Key no privado  
+• Acesso ao download  
+
+💰 **Valor único:**  
+👉 R$5,00  
+
+📲 Suporte disponível  
+
+😈🔥 **Garanta agora e saia na frente!**
       `)
       .setImage('https://media.discordapp.net/attachments/1482528899903782932/1484254280088027216/file_000000008530720eb8922a615208f883.png')
       .setColor(0x00ff88);
@@ -72,85 +72,31 @@ client.on('messageCreate', async (message) => {
 
     const row = new ActionRowBuilder().addComponents(botao);
 
-    message.channel.send({ embeds: [embed], components: [row] });
+    message.channel.send({
+      embeds: [embed],
+      components: [row]
+    });
   }
 });
 
 // INTERAÇÕES
 client.on('interactionCreate', async (interaction) => {
 
-  // FFH4X
-  if (interaction.isButton() && interaction.customId === 'abrir_ticket') {
-
-    const select = new StringSelectMenuBuilder()
-      .setCustomId('produto')
-      .setPlaceholder('Escolha seu plano')
-      .addOptions([
-        { label: '1 dia', description: 'R$17,90', value: '17.90' },
-        { label: '7 dias', description: 'R$25,90', value: '25.90' },
-        { label: '10 dias', description: 'R$35,90', value: '35.90' },
-        { label: '30 dias', description: 'R$55,90', value: '55.90' }
-      ]);
-
-    return interaction.reply({
-      content: '📦 Escolha seu plano:',
-      components: [new ActionRowBuilder().addComponents(select)],
-      ephemeral: true
-    });
-  }
-
-  // CRIAR TICKET FFH4X
-  if (interaction.isStringSelectMenu()) {
-
-    const valor = interaction.values[0];
-
-    const canal = await interaction.guild.channels.create({
-      name: `ticket-${interaction.user.username}`,
-      type: ChannelType.GuildText,
-      permissionOverwrites: [
-        { id: interaction.guild.id, deny: [PermissionsBitField.Flags.ViewChannel] },
-        { id: interaction.user.id, allow: [PermissionsBitField.Flags.ViewChannel] }
-      ]
-    });
-
-    const confirmar = new ButtonBuilder()
-      .setCustomId('confirmar_pagamento')
-      .setLabel('Confirmar Pagamento')
-      .setStyle(ButtonStyle.Success);
-
-    const fechar = new ButtonBuilder()
-      .setCustomId('fechar_ticket')
-      .setLabel('Fechar Ticket')
-      .setStyle(ButtonStyle.Danger);
-
-    const row = new ActionRowBuilder().addComponents(confirmar, fechar);
-
-    const embedPix = new EmbedBuilder()
-      .setTitle('💰 Pagamento')
-      .setDescription(`💵 Valor: R$${valor}\n\nPIX: 21983873874`)
-      .setColor(0x00ff88);
-
-    await canal.send({
-      content: `🎟️ Ticket - ${interaction.user}`,
-      embeds: [embedPix],
-      components: [row]
-    });
-
-    return interaction.reply({
-      content: `✅ Ticket criado: ${canal}`,
-      ephemeral: true
-    });
-  }
-
-  // HOLOGRAMA
+  // CRIAR TICKET HOLOGRAMA
   if (interaction.isButton() && interaction.customId === 'comprar_holo') {
 
     const canal = await interaction.guild.channels.create({
       name: `holo-${interaction.user.username}`,
       type: ChannelType.GuildText,
       permissionOverwrites: [
-        { id: interaction.guild.id, deny: [PermissionsBitField.Flags.ViewChannel] },
-        { id: interaction.user.id, allow: [PermissionsBitField.Flags.ViewChannel] }
+        {
+          id: interaction.guild.id,
+          deny: [PermissionsBitField.Flags.ViewChannel]
+        },
+        {
+          id: interaction.user.id,
+          allow: [PermissionsBitField.Flags.ViewChannel]
+        }
       ]
     });
 
@@ -168,7 +114,15 @@ client.on('interactionCreate', async (interaction) => {
 
     const embedPix = new EmbedBuilder()
       .setTitle('💰 Pagamento HOLOGRAMA')
-      .setDescription(`💵 Valor: R$5,00\n\nPIX: 21983873874`)
+      .setDescription(`
+💵 Valor: R$5,00  
+
+📲 Chave PIX:  
+21983873874  
+
+📌 Após pagar, aguarde confirmação do dono
+      `)
+      .setImage('https://media.discordapp.net/attachments/1482528899903782932/1484254280088027216/file_000000008530720eb8922a615208f883.png')
       .setColor(0x00ff88);
 
     await canal.send({
@@ -183,7 +137,7 @@ client.on('interactionCreate', async (interaction) => {
     });
   }
 
-  // CONFIRMAR
+  // CONFIRMAR PAGAMENTO
   if (interaction.isButton() && interaction.customId === 'confirmar_pagamento') {
 
     const dono = process.env.DONO_ID;
@@ -198,7 +152,8 @@ client.on('interactionCreate', async (interaction) => {
     await interaction.channel.send(`
 ✅ Pagamento confirmado!
 
-📦 Sua key será enviada quando o dono estiver online.
+📦 Sua key será enviada aqui assim que o dono estiver online.
+⏳ Aguarde...
     `);
 
     await interaction.reply({
@@ -207,7 +162,7 @@ client.on('interactionCreate', async (interaction) => {
     });
   }
 
-  // FECHAR
+  // FECHAR TICKET
   if (interaction.isButton() && interaction.customId === 'fechar_ticket') {
 
     const dono = process.env.DONO_ID;
